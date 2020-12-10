@@ -1,14 +1,17 @@
-// if (process.env.NODE_ENV !== "production") {
-//   require("dotenv").config();
-// }
-const express = require("express");
-const routes = require("./routes");
-const cors = require('cors')
-const app = express();
+const app = require("express")();
+const server = require("http").createServer(app);
+const io = require("socket.io")(server);
+const PORT = process.env.PORT || 3000;
 
-app.use(cors())
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(routes)
+let counter = [{
+    name: "player1",
+    counter: 0
+}]
 
-module.exports = app;
+io.on("connect", (socket) => {
+    socket.emit("countClick", counter);
+});
+
+server.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}`);
+});
