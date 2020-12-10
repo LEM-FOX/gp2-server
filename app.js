@@ -7,6 +7,7 @@ let counters = [
   {
     name: "player1",
     counter: 0,
+    scoreLawan: 0
   },
 ];
 
@@ -16,10 +17,14 @@ io.on("connect", (socket) => {
   // io.emit("countClick", counters);
 
   socket.on("newCounter", function (payload) {
+
+    counters[0].scoreLawan = payload.scoreLawan
+    counters[0].counter = payload.score
+
     // counters[0].counter = payload.score
-    counters.push(payload.score);
-    // console.log(counters.length - 1);
     socket.broadcast.emit("scoreLawan", payload.score);
+    console.log(counters[0])
+    // console.log(counters.length - 1);
   });
 
   socket.on("terserahlulah", function (payload) {
