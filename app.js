@@ -22,21 +22,23 @@ io.on("connect", (socket) => {
       admin : payload.admin
     }
     rooms.push(room)
-    console.log(rooms, 'ini dari room')
     io.emit('updatedRoom', rooms)
   })
   socket.on('joinRoom', payload => {
     socket.join(payload.roomName, () => {
       let roomIndex = rooms.findIndex((i) => i.name == payload.roomName)
       rooms[roomIndex].users.push(payload.username)
+      console.log(rooms[roomIndex], 'ini dari socket join room')
       io.sockets.in(payload.roomName).emit("roomDetail", rooms[roomIndex])
     })
   })
   socket.on('startGame', data => {
-    socket.broadcast.to(data).emit('startGame')
+    console.log(data, 'tes')
+    io.in(data).emit('startGame')
   })
   socket.on("newCounter", function (payload) {
     counters[0].counter = payload.score
+    
     socket.broadcast.emit("scoreLawan", payload.score);
   });
 
