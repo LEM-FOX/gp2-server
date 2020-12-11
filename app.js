@@ -7,6 +7,8 @@ let counters = [];
 
 let rooms = []
 
+let collectionPlayer = []
+
 io.on("connect", (socket) => {
   // io.in("Game").emit("countClick", counters)
   io.emit("countClick", counters);
@@ -25,24 +27,29 @@ io.on("connect", (socket) => {
     io.emit('updatedRoom', rooms)
   })
   socket.on('joinRoom', payload => {
+    collectionPlayer.push(payload.username)
+    // console.log(collectionPlayer, "-0-0-0-0-0-0-0-0")
     socket.join(payload.roomName, () => {
       let roomIndex = rooms.findIndex((i) => i.name == payload.roomName)
       rooms[roomIndex].users.push(payload.username)
       console.log(rooms[roomIndex], 'ini dari socket join room')
       io.sockets.in(payload.roomName).emit("roomDetail", rooms[roomIndex])
     })
+    
   })
   socket.on('startGame', data => {
     console.log(data, 'tes')
     io.in(data).emit('startGame')
+    socket.broadcast.to(data).emit('startGame')
   })
   socket.on("newCounter", function (payload) {
     counters[0].counter = payload.score
     
     socket.broadcast.emit("scoreLawan", payload.score);
   });
-
-
+  
+  io.emit("collectionPlayer", collectionPlayer)
+  
 });
 
 server.listen(PORT, () => {
