@@ -1,5 +1,7 @@
 # GP2-SERVER
 
+> deploy server link
+> https://ghost-hunters.herokuapp.com/
 1. Ketika button ditekan dia akan nambahin count dan update di database
 
 2. Kalau udah berfungsi button tersebut diganti dengan suatu gambar yang bisa di klik
